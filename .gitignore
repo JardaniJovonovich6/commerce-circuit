@@ -1,0 +1,17 @@
+# IDE and local machine files
+.idea/
+*.iml
+
+# Build output
+**/target/
+**/${project.build.directory}/
+
+# Real local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks

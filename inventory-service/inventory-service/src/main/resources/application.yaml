@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: inventory-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/inventory-db
+    username: inventory-user
+    password: inventory-password
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+
+
+
+server:
+  port: 9010
+  servlet:
+    context-path: /api/v1
+
+#Understanding Eureka (New start)
+#Eureka Configuration for Client
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

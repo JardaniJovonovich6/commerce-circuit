@@ -1,0 +1,44 @@
+services:
+
+  order-postgres:
+    image: postgres:15
+    container_name: order-postgres
+    environment:
+      TZ: Asia/Kolkata
+      POSTGRES_DB: order-db
+      POSTGRES_USER: order-user
+      POSTGRES_PASSWORD: order-password
+    command: [ "postgres", "-c", "timezone=Asia/Kolkata" ]
+    ports:
+      - "5434:5432"
+    volumes:
+      - order-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL" , "pg_isready -U order-user -d order-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  inventory-postgres:
+    image: postgres:15
+    container_name: inventory-postgres
+    environment:
+      TZ: Asia/Kolkata
+      POSTGRES_DB: inventory-db
+      POSTGRES_USER: inventory-user
+      POSTGRES_PASSWORD: inventory-password
+    command: ["postgres", "-c", "timezone=Asia/Kolkata"]
+    ports:
+      - "5433:5432"
+    volumes:
+      - inventory-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL" , "pg_isready -U inventory-user -d inventory-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  inventory-postgres-data:
+  order-postgres-data:

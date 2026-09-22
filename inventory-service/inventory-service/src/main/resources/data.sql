@@ -1,0 +1,26 @@
+-- Seed products for local development. Each statement is safe to run on every startup.
+INSERT INTO product (name, price, stock) SELECT 'Wireless Mouse', 799.00, 50 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Wireless Mouse');
+INSERT INTO product (name, price, stock) SELECT 'Mechanical Keyboard', 2499.00, 35 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Mechanical Keyboard');
+INSERT INTO product (name, price, stock) SELECT 'USB-C Hub', 1499.00, 42 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'USB-C Hub');
+INSERT INTO product (name, price, stock) SELECT 'Laptop Stand', 1199.00, 28 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Laptop Stand');
+INSERT INTO product (name, price, stock) SELECT 'Noise Cancelling Headphones', 5999.00, 20 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Noise Cancelling Headphones');
+INSERT INTO product (name, price, stock) SELECT 'Bluetooth Speaker', 1899.00, 45 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Bluetooth Speaker');
+INSERT INTO product (name, price, stock) SELECT 'Webcam 1080p', 2299.00, 30 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Webcam 1080p');
+INSERT INTO product (name, price, stock) SELECT 'Gaming Mouse Pad', 499.00, 60 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Gaming Mouse Pad');
+INSERT INTO product (name, price, stock) SELECT 'External SSD 1TB', 7499.00, 18 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'External SSD 1TB');
+INSERT INTO product (name, price, stock) SELECT 'Portable Hard Drive 2TB', 5299.00, 22 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Portable Hard Drive 2TB');
+INSERT INTO product (name, price, stock) SELECT 'USB-C Cable 1m', 299.00, 100 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'USB-C Cable 1m');
+INSERT INTO product (name, price, stock) SELECT 'Fast Charger 30W', 999.00, 55 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Fast Charger 30W');
+INSERT INTO product (name, price, stock) SELECT 'Smart Watch', 3999.00, 25 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Smart Watch');
+INSERT INTO product (name, price, stock) SELECT 'Fitness Band', 1699.00, 40 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Fitness Band');
+INSERT INTO product (name, price, stock) SELECT 'Phone Tripod', 899.00, 32 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Phone Tripod');
+INSERT INTO product (name, price, stock) SELECT 'Ring Light', 1299.00, 24 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Ring Light');
+INSERT INTO product (name, price, stock) SELECT 'Laptop Backpack', 2199.00, 33 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Laptop Backpack');
+INSERT INTO product (name, price, stock) SELECT 'Monitor 24 Inch', 8999.00, 15 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Monitor 24 Inch');
+INSERT INTO product (name, price, stock) SELECT 'HDMI Cable 2m', 399.00, 80 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'HDMI Cable 2m');
+INSERT INTO product (name, price, stock) SELECT 'Ethernet Cable 5m', 449.00, 65 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Ethernet Cable 5m');
+INSERT INTO product (name, price, stock) SELECT 'Wi-Fi Router', 3499.00, 19 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Wi-Fi Router');
+INSERT INTO product (name, price, stock) SELECT 'Power Bank 20000mAh', 1899.00, 37 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Power Bank 20000mAh');
+INSERT INTO product (name, price, stock) SELECT 'Desk Lamp', 1099.00, 29 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Desk Lamp');
+INSERT INTO product (name, price, stock) SELECT 'Office Chair', 6999.00, 12 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Office Chair');
+INSERT INTO product (name, price, stock) SELECT 'Notebook Set', 249.00, 90 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Notebook Set');
