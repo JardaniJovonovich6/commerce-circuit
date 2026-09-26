@@ -1,5 +1,6 @@
 package com.aks.ecommerce.inventory_service.controller;
 
+import com.aks.ecommerce.inventory_service.client.OrdersFeignClient;
 import com.aks.ecommerce.inventory_service.dto.Productdto;
 import com.aks.ecommerce.inventory_service.entity.Product;
 import com.aks.ecommerce.inventory_service.service.ProductService;
@@ -27,6 +28,7 @@ public class ProductController {
     private final ModelMapper modelMapper;
     private final DiscoveryClient discoveryClient;
     private final RestClient restClient;
+    private final OrdersFeignClient ordersFeignClient;
 
 
     @GetMapping("/fetchOrders")
@@ -42,6 +44,12 @@ public class ProductController {
                 .body(String.class);
 
     }
+
+    @GetMapping("/fetchOrdersUsingFeignClient")
+    public String fetchOrdersUsingFeignClientFromOrderSevice(){
+        return ordersFeignClient.getOrdersUsingFeign();
+    }
+
 
 
     @PostMapping("/create")
