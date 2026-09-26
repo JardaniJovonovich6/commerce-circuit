@@ -5,6 +5,7 @@ import com.aks.ecommerce.order_service.service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.Order;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,14 @@ public class OrdersController {
     @GetMapping("/helloOrders")
     public String helloOrders() {
         return "Hello from Orders Service";
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<OrderRequestDto> createOrders(@RequestBody OrderRequestDto orderRequestDto){
+
+        OrderRequestDto OrderRequestDtoSaved = orderService.createOrders(orderRequestDto);
+        return ResponseEntity.ok(OrderRequestDtoSaved);
+
     }
 
     @GetMapping

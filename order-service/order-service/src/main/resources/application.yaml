@@ -13,10 +13,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data.sql
+#  sql:
+#    init:
+#      mode: always
+#      data-locations: classpath:data.sql
 
 server:
   servlet:

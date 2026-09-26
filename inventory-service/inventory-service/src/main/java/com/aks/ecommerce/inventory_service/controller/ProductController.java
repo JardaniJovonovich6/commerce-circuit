@@ -1,6 +1,7 @@
 package com.aks.ecommerce.inventory_service.controller;
 
 import com.aks.ecommerce.inventory_service.client.OrdersFeignClient;
+import com.aks.ecommerce.inventory_service.dto.OrderRequestDto;
 import com.aks.ecommerce.inventory_service.dto.Productdto;
 import com.aks.ecommerce.inventory_service.entity.Product;
 import com.aks.ecommerce.inventory_service.service.ProductService;
@@ -65,5 +66,13 @@ public class ProductController {
                 .toList()
         );
     }
+
+    @PutMapping("/reduce-stocks")
+    public ResponseEntity<Double> reduceStocks(@RequestBody OrderRequestDto orderRequestDto){
+        Double TotalPrice = productService.reduceStocks(orderRequestDto);
+        return ResponseEntity.ok(TotalPrice);
+    }
+
+
 
 }

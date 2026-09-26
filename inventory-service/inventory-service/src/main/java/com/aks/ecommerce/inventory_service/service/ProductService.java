@@ -1,5 +1,7 @@
 package com.aks.ecommerce.inventory_service.service;
 
+import com.aks.ecommerce.inventory_service.dto.OrderRequestDto;
+import com.aks.ecommerce.inventory_service.dto.OrderRequestItemDto;
 import com.aks.ecommerce.inventory_service.entity.Product;
 import com.aks.ecommerce.inventory_service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,29 @@ public class ProductService {
     public List<Product> getAllProducts(){
         return productRepository.findAll();
     }
+
+
+    public Double reduceStocks(OrderRequestDto orderRequestDto){
+        Double totalPrice = 0.0;
+        for(OrderRequestItemDto orderRequestItemDto : orderRequestDto.getItems()){
+            Long productRequestId = orderRequestItemDto.getProductId();
+            Product product = productRepository.findById(productRequestId)
+                    .orElseThrow(() -> new RuntimeException("Product with id " + productRequestId + " was not Found ......."));
+
+            if(product.getStock() < orderRequestItemDto.getQuantity()){
+                throw new RuntimeException("Stocks on this item is low : " + productRequestId);
+            }
+            product.setStock(product.getStock()-orderRequestItemDto.getQuantity());
+            productRepository.save(product);
+
+            Double itemprice = product.getPrice()*orderRequestItemDto.getQuantity();
+            totalPrice += itemprice;
+        }
+
+        return totalPrice;
+    }
+
+
 
 
 
