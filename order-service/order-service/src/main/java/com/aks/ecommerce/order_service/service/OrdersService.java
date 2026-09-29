@@ -6,12 +6,15 @@ import com.aks.ecommerce.order_service.entity.OrderItem;
 import com.aks.ecommerce.order_service.entity.OrderStatus;
 import com.aks.ecommerce.order_service.entity.Orders;
 import com.aks.ecommerce.order_service.repoitory.OrdersRepository;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -35,8 +38,13 @@ public class OrdersService {
         return modelMapper.map(order, OrderRequestDto.class);
     }
 
+
+//    @Retry(name = "inventoryRetry" , fallbackMethod = "createOrdersFallback")
+    @RateLimiter(name = "inventoryRateLimiter" , fallbackMethod = "createOrdersFallback")
     public OrderRequestDto createOrders(OrderRequestDto orderRequestDto) {
+        log.info("Calling reduceStocks by OpenFeignCleint");
         Double totalPrice = inventoryOpenFeignClient.reduceStocks(orderRequestDto);
+        log.info("Calling createOrder method");
 
 
         Orders orders = modelMapper.map(orderRequestDto , Orders.class);
@@ -50,4 +58,14 @@ public class OrdersService {
 
         return modelMapper.map(savedOrder , OrderRequestDto.class);
     }
+
+    public OrderRequestDto createOrdersFallback(OrderRequestDto orderRequestDto , Throwable throwable){
+        log.error("Fallback occured due to an Error : {}", throwable.getMessage());
+        return new OrderRequestDto();
+    }
+
+//    public OrderRequestDto createOrdersFallbackRateLimiter(OrderRequestDto orderRequestDto , Throwable throwable){
+//        log.error("Fallback occured due to RateLimiter (This is a Custom Message by SLF4J , not from RateLimiter)");
+//        return  new OrderRequestDto();
+//    }
 }
