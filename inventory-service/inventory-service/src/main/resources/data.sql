@@ -1,6 +1,6 @@
 -- Seed products for local development. Each statement is safe to run on every startup.
-INSERT INTO product (name, price, stock) SELECT 'Wireless Mouse', 799.00, 50 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Wireless Mouse');
-INSERT INTO product (name, price, stock) SELECT 'Mechanical Keyboard', 2499.00, 35 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Mechanical Keyboard');
+INSERT INTO product (name, price, stock) SELECT 'Wireless Mouse', 799.00, 100 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Wireless Mouse');
+INSERT INTO product (name, price, stock) SELECT 'Mechanical Keyboard', 2499.00, 100 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Mechanical Keyboard');
 INSERT INTO product (name, price, stock) SELECT 'USB-C Hub', 1499.00, 42 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'USB-C Hub');
 INSERT INTO product (name, price, stock) SELECT 'Laptop Stand', 1199.00, 28 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Laptop Stand');
 INSERT INTO product (name, price, stock) SELECT 'Noise Cancelling Headphones', 5999.00, 20 WHERE NOT EXISTS (SELECT 1 FROM product WHERE name = 'Noise Cancelling Headphones');

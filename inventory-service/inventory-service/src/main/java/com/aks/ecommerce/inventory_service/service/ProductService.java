@@ -47,6 +47,19 @@ public class ProductService {
         return totalPrice;
     }
 
+    public void addStocks(OrderRequestDto orderRequestDto){
+        for(OrderRequestItemDto item : orderRequestDto.getItems()){
+            Long productRequestId = item.getProductId();
+            Integer productQuantity = item.getQuantity();
+
+            Product product = productRepository.findById(productRequestId)
+                    .orElseThrow(() -> new RuntimeException("Product is not present in Inventory with ID : " + productRequestId + " For Cancellation purpose"));
+
+            product.setStock(product.getStock() + productQuantity);
+            productRepository.save(product);
+        }
+    }
+
 
 
 

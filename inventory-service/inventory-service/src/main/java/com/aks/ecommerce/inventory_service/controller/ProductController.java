@@ -73,6 +73,12 @@ public class ProductController {
         return ResponseEntity.ok(TotalPrice);
     }
 
+    @PutMapping("/addStocks")
+    public ResponseEntity<String> addStocks(@RequestBody OrderRequestDto orderRequestDto){
+        productService.addStocks(orderRequestDto);
+        return ResponseEntity.accepted().body("The Stocks where updated ....");
+    }
+
 
 
 }

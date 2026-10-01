@@ -5,12 +5,12 @@ import com.aks.ecommerce.order_service.service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.Order;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
+
 
 import java.util.List;
 
@@ -36,6 +36,16 @@ public class OrdersController {
         OrderRequestDto OrderRequestDtoSaved = orderService.createOrders(orderRequestDto);
         return ResponseEntity.ok(OrderRequestDtoSaved);
 
+    }
+
+    @DeleteMapping("cancel/{id}")
+    public ResponseEntity<String> cancel(@PathVariable Long id){
+        boolean responseFromService = orderService.cancelOrder(id);
+
+        if(responseFromService == false)
+            return ResponseEntity.badRequest().body("Order was already delivered with order id " + id);
+        else
+            return ResponseEntity.accepted().body("Order is cancelled for the ID : " + id);
     }
 
     @GetMapping
