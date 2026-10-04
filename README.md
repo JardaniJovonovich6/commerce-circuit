@@ -111,7 +111,7 @@ This helped me understand that Eureka tells the gateway **where a service instan
 | Lombok | Reducing boilerplate with annotations such as `@RequiredArgsConstructor` and `@Slf4j` |
 | ModelMapper | Converting between entities and DTOs |
 | Spring Cloud Netflix Eureka | Service discovery server and service clients |
-| Spring Cloud Gateway Server Web MVC | Routing selected API paths through port `8080` |
+| Spring Cloud Gateway Server WebFlux | Routing selected API paths through port `8080`, with reactive global and route filters |
 | OpenFeign | Declarative HTTP calls between services |
 | `RestClient` | Direct HTTP-call experiments after resolving a service through Eureka |
 | Spring Boot Actuator | Exploring application endpoints; Order Service exposes actuator endpoints locally |
