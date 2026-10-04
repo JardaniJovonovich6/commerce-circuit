@@ -26,7 +26,7 @@ public class OrdersController {
     private final RestClient restClient;
 
     @GetMapping("/helloOrders")
-    public String helloOrders() {
+    public String helloOrders(@RequestHeader("X-User-Id") Long userId) {
         return "Hello from Orders Service";
     }
 

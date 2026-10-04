@@ -26,6 +26,8 @@ server:
 #Understanding Eureka (New start)
 #Eureka Configuration for Client
 eureka:
+  instance:
+    hostname: localhost
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka

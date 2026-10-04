@@ -1,3 +1,7 @@
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+
+
 spring:
   application:
     name: api-gateway
@@ -6,12 +10,18 @@ spring:
   cloud:
     gateway:
       server:
-        webmvc:
+        webflux:
           routes:
             - id: order-service
               uri: lb://ORDER-SERVICE
               predicates:
                 - Path=/api/v1/orders/**
+              filters:
+                - name : OrdersLoggingFilter
+                - name : Authentication
+                  args:
+                    enable : true
+
             - id: inventory-service
               uri: lb://INVENTORY-SERVICE
               predicates:
