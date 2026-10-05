@@ -20,7 +20,7 @@ The goal is to understand the request flow and the reason behind each technology
 Client
   |
   v
-API Gateway :8080
+API Gateway :8080 (Applied AuthenticationGatwayFilter using JwtToken)
   |
   +--> Order Service :9020 --------OpenFeign--------> Inventory Service :9010
   |          |                                              |
