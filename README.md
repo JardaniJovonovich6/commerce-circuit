@@ -10,6 +10,7 @@ I wanted to move beyond a single Spring Boot CRUD application and understand how
 - another service creates and cancels orders;
 - a discovery server helps services find each other;
 - an API Gateway gives one entry point for selected routes;
+- a Config Server supplies service settings from a separate Git repository;
 - PostgreSQL containers let each main service keep its own data.
 
 The goal is to understand the request flow and the reason behind each technology—not to make a complete e-commerce website.
@@ -20,7 +21,7 @@ The goal is to understand the request flow and the reason behind each technology
 Client
   |
   v
-API Gateway :8080 (Applied AuthenticationGatwayFilter using JwtToken)
+API Gateway :8080 (WebFlux, JWT authentication and role-filter experiments)
   |
   +--> Order Service :9020 --------OpenFeign--------> Inventory Service :9010
   |          |                                              |
@@ -29,10 +30,11 @@ API Gateway :8080 (Applied AuthenticationGatwayFilter using JwtToken)
   |
   +--> Inventory Service :9010
 
-All applications register with / use Eureka Discovery Server :8761
+Service discovery: Eureka :8761
+Configuration at startup: Git config repository -> Config Server :8888 -> service clients
 ```
 
-Each service has the `/api/v1` context path, so the gateway forwards these paths without removing that prefix.
+Order and Inventory use the `/api/v1` servlet context path. The Gateway preserves that prefix. Their port/context-path settings now belong in the separate configuration repository.
 
 ## Services I have built so far
 
@@ -42,6 +44,7 @@ Each service has the `/api/v1` context path, so the gateway forwards these paths
 | `order-service` | Order persistence, calling Inventory before saving an order, and cancellation flow | `9020` |
 | `discovery-service` | Service registration and lookup with Netflix Eureka | `8761` |
 | `api-gateway` | Gateway route configuration and load-balanced `lb://...` destinations | `8080` |
+| `config-server` | Git-backed configuration, service/profile selection, and Config Client imports | `8888` |
 | `inventory-postgres` | PostgreSQL database used by Inventory | host `5433` |
 | `order-postgres` | PostgreSQL database used by Orders | host `5434` |
 
@@ -111,6 +114,7 @@ This helped me understand that Eureka tells the gateway **where a service instan
 | Lombok | Reducing boilerplate with annotations such as `@RequiredArgsConstructor` and `@Slf4j` |
 | ModelMapper | Converting between entities and DTOs |
 | Spring Cloud Netflix Eureka | Service discovery server and service clients |
+| Spring Cloud Config | Config Server reads Git; Order, Inventory, and Gateway import remote settings at startup |
 | Spring Cloud Gateway Server WebFlux | Routing selected API paths through port `8080`, with reactive global and route filters |
 | OpenFeign | Declarative HTTP calls between services |
 | `RestClient` | Direct HTTP-call experiments after resolving a service through Eureka |
@@ -124,7 +128,9 @@ This helped me understand that Eureka tells the gateway **where a service instan
 - Inventory connects to PostgreSQL on `localhost:5433`; Orders connects on `localhost:5434`.
 - PostgreSQL containers use `Asia/Kolkata` as their timezone.
 - Each application is its own Maven project, so I open/run them separately in IntelliJ.
-- A useful startup order while learning is: PostgreSQL containers → Discovery Service → Inventory Service → Order Service → API Gateway.
+- Load the local `.env` through each relevant IntelliJ Run Configuration. IntelliJ supplies environment variables before Spring starts; this setup does not require a dotenv dependency.
+- A useful startup order while learning is: PostgreSQL containers → Discovery Service → Config Server → Inventory Service → Order Service → API Gateway.
+- Current service imports use `configserver:http://localhost:8888` without `optional:`, so Config Server must be available when these clients start.
 
 ## Useful endpoints for testing locally
 
@@ -138,6 +144,30 @@ These are the endpoints currently present in the controllers. They are for local
 | `POST` | `http://localhost:9020/api/v1/orders/create` | Create an order and reduce stock |
 | `DELETE` | `http://localhost:9020/api/v1/orders/cancel/{id}` | Cancel an order and add stock back |
 | `GET` | `http://localhost:8080/api/v1/orders/helloOrders` | Same Order check through Gateway |
+
+The direct Order hello endpoint currently requires `X-User-Id`; the authentication filter supplies it when using Gateway. Gateway requests also need a valid bearer token and any roles required by the configured route.
+
+## Progress — 8 October 2026
+
+Today I connected Gateway authorization learning with centralized configuration:
+
+- Built `RequiredRoleGatewayFilterFactory` and its route-level `Config.requiredRole` setting.
+- Read `Authorization`, removed the seven-character `Bearer ` prefix, and extracted the JWT `roles` claim through `JwtService`.
+- Diagnosed `roles = null`: a token with `admin: true` does not contain a `roles` array. A later test token produced `[admin, client, freeUser]` in the request logs.
+- Practised comparing the configured role with token roles, including case matching, and added Order admin/dev panel endpoints for experimentation.
+- Understood that `OrdersLoggingFilter` applies to routes that list it; a `GlobalFilter` participates in all matched Gateway routes.
+- Created a Git-backed Config Server on port `8888`, registered it with Eureka, and kept Git credentials in environment variables loaded by IntelliJ.
+- Added Config Client dependencies/imports to Order and Inventory, and subsequently configured Gateway as a Config Client too.
+- Reported the Order migration working and diagnosed the Inventory config failure as duplicate `defaultZone` YAML keys. The later `master` error was fallback noise after parsing `main` failed.
+
+Current learning checkpoint: the role filter sets `403` but still calls `chain.filter(exchange)` on denial. Stopping the request needs `exchange.getResponse().setComplete()` instead. Missing roles/headers and invalid JWTs also need explicit handling. An admin endpoint existing in Order does not by itself enforce permission.
+
+The separate Git configuration repository was not inspected during this documentation update; its exact route definitions and the completed Inventory YAML correction are not independently verified here.
+
+### Reference documents
+
+- [Today's learning record](docs/learning-diary/2026-10-08-gateway-roles-and-config-server.md): what I studied, applied, debugged, and still need to practise.
+- [Step-by-step microservices guide](docs/guides/microservices-build-and-connect.md): build a service, connect OpenFeign, configure discovery/Gateway, migrate to Config Server, and troubleshoot common failures.
 
 ## Things I am intentionally still learning
 
@@ -155,9 +185,13 @@ This is a progress record, not a feature promise. Some code is deliberately simp
 ```text
 ECommerce/
 ├── api-gateway/api-gateway/
+├── config-server/config-server/
 ├── discovery-service/discovery-service/
 ├── inventory-service/inventory-service/
 ├── order-service/order-service/
+├── docs/
+│   ├── learning-diary/
+│   └── guides/
 ├── docker-compose.yaml
 └── README.md
 ```
