@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatusCode;
@@ -24,6 +25,9 @@ import java.util.stream.Stream;
 @RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
+
+    @Value("${my.globalVariable}")
+    private String myGLobalVariable;
 
     private final ProductService productService;
     private final ModelMapper modelMapper;
@@ -44,6 +48,11 @@ public class ProductController {
                 .retrieve()
                 .body(String.class);
 
+    }
+
+    @GetMapping("/adminPanel")
+    public String adminpanel(){
+        return "Welsome to Inventory Admin Panel : " + myGLobalVariable;
     }
 
     @GetMapping("/fetchOrdersUsingFeignClient")

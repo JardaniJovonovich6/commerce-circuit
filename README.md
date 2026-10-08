@@ -169,6 +169,26 @@ The separate Git configuration repository was not inspected during this document
 - [Today's learning record](docs/learning-diary/2026-10-08-gateway-roles-and-config-server.md): what I studied, applied, debugged, and still need to practise.
 - [Step-by-step microservices guide](docs/guides/microservices-build-and-connect.md): build a service, connect OpenFeign, configure discovery/Gateway, migrate to Config Server, and troubleshoot common failures.
 
+## Progress — 9 October 2026
+
+Today I studied runtime configuration refresh and feature toggles:
+
+- Created `DevPanelConfiguration` with `@Value("${devPanel.toggle}")`, Lombok getters, and `@RefreshScope`.
+- Injected it into Order's controller so `/api/v1/orders/devPanel` selects a welcome or closed message according to the flag.
+- Made `OrdersController` refresh-scoped too, because it directly injects `my.variable` and `my.globalVariable`.
+- Explored shared settings in remote `application.yml` and profile-specific settings in `order-service-dev.yml`.
+- Added an Inventory admin-panel experiment that displays the shared value; added Actuator dependencies to Gateway, Config Server, and Discovery.
+- Learned the update sequence: edit Git settings → commit/push → `POST` the consuming service's `/actuator/refresh` → request the feature again.
+
+The [configuration repository](https://github.com/JardaniJovonovich6/ecommerce-config-server) was reviewed through authenticated Git at revision `49e2f42`. At that revision, `devPanel.toggle` is `true`, the shared variable is in `application.yml`, and Inventory has a single `defaultZone`. Order currently activates `global`, not `dev`: its `order-service-dev.yml` override therefore is not selected. The word `global` is an ordinary profile name; shared `application.yml` does not require it.
+
+Current review notes: the disabled dev panel returns a message with HTTP `200`; the toggle is behavior selection, not an authorization check. Inventory's controller currently has no `@RefreshScope`, so its injected shared-value field is not refreshed by this mechanism. A refresh affects one running client instance; it does not automatically broadcast to every service.
+
+- [Today's refresh-scope learning record](docs/learning-diary/2026-10-09-refresh-scope-and-feature-toggles.md)
+- [Refresh scope and feature-toggle guide](docs/guides/refresh-scope-and-feature-toggles.md)
+
+The review checked source and the remote Git snapshot. It did not change the remote repository or execute a live feature-toggle refresh cycle.
+
 ## Things I am intentionally still learning
 
 This is a progress record, not a feature promise. Some code is deliberately simple because the current focus is understanding the fundamentals. Areas I have started exploring or plan to revisit while learning include:

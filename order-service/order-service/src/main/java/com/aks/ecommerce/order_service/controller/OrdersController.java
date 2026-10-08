@@ -1,12 +1,15 @@
 package com.aks.ecommerce.order_service.controller;
 
+import com.aks.ecommerce.order_service.config.DevPanelConfiguration;
 import com.aks.ecommerce.order_service.dto.OrderRequestDto;
 import com.aks.ecommerce.order_service.service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
@@ -19,11 +22,20 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RefreshScope
 public class OrdersController {
+
+    @Value("${my.variable}")
+    private String propertiesVariable;
+
+    @Value("${my.globalVariable}")
+    private String propertiesGlobalVariable;
 
     private final OrdersService orderService;
     private final DiscoveryClient discoveryClient;
     private final RestClient restClient;
+
+    private final DevPanelConfiguration devPanelConfiguration;
 
     @GetMapping("/helloOrders")
     public String helloOrders(@RequestHeader("X-User-Id") Long userId) {
@@ -32,11 +44,17 @@ public class OrdersController {
 
     @GetMapping("/adminPanel")
     public String adminpanel(){
-        return "Welcome to Admin panel";
+        return "Welcome to Admin panel : " + propertiesGlobalVariable;
     }
+
     @GetMapping("/devPanel")
     public String devinpanel(){
-        return "Welcome to dev panel";
+
+        if(devPanelConfiguration.getDevPaneltoggle()){
+            return "Welcome to dev panel , this is fro Order-service with propertyVariable : " + propertiesVariable + " and this Global Variable : " + propertiesGlobalVariable;
+        }else {
+            return "DevPanel is closed , shut your latops and tocuh the grass";
+        }
     }
 
     @PostMapping("/create")

@@ -370,7 +370,7 @@ Move runtime settings to the matching Git file only after checking the server re
 
 Without `optional:`, the import is required. Adding `optional:` allows unavailable configuration to be skipped, but does not invent missing database/route settings.
 
-A Git commit does not automatically refresh running applications. For this learning setup, commit/push, check the Config Server response, then restart the consuming application. Dynamic refresh is a separate topic.
+A Git commit does not automatically refresh running applications. Restart the consuming application, or use the [refresh-scope and feature-toggle guide](refresh-scope-and-feature-toggles.md) for the runtime refresh experiment added on 9 October. Refresh applies to eligible beans, not every application setting.
 
 Suggested startup order:
 
