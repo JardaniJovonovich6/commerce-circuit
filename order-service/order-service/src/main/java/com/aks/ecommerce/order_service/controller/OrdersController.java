@@ -30,6 +30,15 @@ public class OrdersController {
         return "Hello from Orders Service";
     }
 
+    @GetMapping("/adminPanel")
+    public String adminpanel(){
+        return "Welcome to Admin panel";
+    }
+    @GetMapping("/devPanel")
+    public String devinpanel(){
+        return "Welcome to dev panel";
+    }
+
     @PostMapping("/create")
     public ResponseEntity<OrderRequestDto> createOrders(@RequestBody OrderRequestDto orderRequestDto){
 

@@ -21,6 +21,9 @@ spring:
                 - name : Authentication
                   args:
                     enable : true
+                - name: RequiredRole
+                  args:
+                    requiredRole: ADMIN
 
             - id: inventory-service
               uri: lb://INVENTORY-SERVICE
