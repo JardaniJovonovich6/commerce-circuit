@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
+import static reactor.netty.http.HttpConnectionLiveness.log;
+
 
 @Component
 public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFactory<AuthenticationGatewayFilterFactory.Config> {
@@ -33,15 +35,12 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
             }
 
             String token = authorizationHeader.split("Bearer ")[1];
+//            ServerHttpRequest updatedRequest = exchange.getRequest()
+//                    .mutate()
+//                    .header("X-User-Id", userId.toString())
+//                    .build();
 
-            Long userId = jwtService.getUserIdFromToken(token);
-
-            ServerHttpRequest updatedRequest = exchange.getRequest()
-                    .mutate()
-                    .header("X-User-Id", userId.toString())
-                    .build();
-
-            return chain.filter(exchange.mutate().request(updatedRequest).build());
+            return chain.filter(exchange);
         };
 
     }

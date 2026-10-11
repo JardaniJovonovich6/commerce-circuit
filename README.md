@@ -189,6 +189,17 @@ Current review notes: the disabled dev panel returns a message with HTTP `200`; 
 
 The review checked source and the remote Git snapshot. It did not change the remote repository or execute a live feature-toggle refresh cycle.
 
+## Progress — 11 October 2026
+
+### Zipkin tracing and Gateway authentication experiment
+
+- Added the local Zipkin container at `http://localhost:9411` and tracing-related Micrometer/Feign dependencies to Gateway, Order, and Inventory.
+- Added `MicrometerCapability` beans so the OpenFeign learning flow can emit Micrometer observations.
+- Temporarily changed `AuthenticationGatewayFilterFactory` so an enabled route still requires an `Authorization` header, but forwards the original request unchanged.
+- Paused the `X-User-Id` header mutation while revisiting how the Gateway should extract and forward the JWT subject safely.
+
+Current learning checkpoint: requests to Order endpoints that require `X-User-Id` will not work through this temporary Gateway configuration until the immutable request mutation is restored. The next step is to validate the bearer-token format, extract the user ID through `JwtService`, and pass the mutated exchange to `chain.filter(...)` without logging the token.
+
 ## Things I am intentionally still learning
 
 This is a progress record, not a feature promise. Some code is deliberately simple because the current focus is understanding the fundamentals. Areas I have started exploring or plan to revisit while learning include:
