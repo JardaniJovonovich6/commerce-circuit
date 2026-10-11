@@ -1,5 +1,13 @@
 services:
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin_Ecom
+    ports:
+      - "9411:9411"
+
+
+
   order-postgres:
     image: postgres:15
     container_name: order-postgres
